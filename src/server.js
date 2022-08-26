@@ -1,28 +1,31 @@
-require('dotenv').config();
+    require('dotenv').config();
+    const cors = require('cors');
+    const morgan =require('morgan')
+    const express = require('express');
+    const app = express();
+    app.use(express.json());
+    app.use(cors());
+    app.use(morgan('combined'))
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json({ type: 'application/vnd.api+json' }));
+    const port = 3000;
 
-const cors = require('cors');
-const {json} = require('express');
-const express = require('express');
-const app = express();
-app.use(express.json());
-app.use(cors());
-const port = 8080;
+    app.use((req,
+             res,
+             next) => {
+            res.header("Access-Control-Allow-Origin", "*");
+            app.use(cors());
+            next();
+        }
+    );
 
-app.use((req,
-         res,
-         next) => {
-        res.header("Access-Control-Allow-Origin", "*");
-        app.use(cors());
-        next();
-    }
-);
+    const user = require('./api/database/User')
 
-// const users = require('./api/dataBase');
-//
-// app.post('/createuser', users.createUser);
-// app.get('/users', users.getAllUsers);
-// app.put('/updateuser', users.updateUser);
-// app.delete('/deleteuser', users.deleteUser);
+    app.post('/user/insert', user.createUser);
+    app.get('/userget/:id', user.getUser);
+    app.put('/userupdate', user.updateUser);
+    app.delete('/user/delete', user.deleteUser);
+    app.get('/users', user.getAllUsers);
 
 
-app.listen(port, () => console.log(port));
+    app.listen(port, () => console.log(port));
