@@ -71,7 +71,7 @@
             nome,
         } = req.body;
 
-        await client.query('UPDATE usuario SET nome = $2, WHERE id= $1',
+        await client.query('UPDATE usuario SET nome = $2 WHERE id= $1',
             [id, nome],
             (err, results) => {
 
@@ -92,8 +92,8 @@
 
     const deleteUser = async (req, resp) => {
 
-        const id = req.body;
-        await client.query('DELETE FROM usuario WHERE id = $1', [id], (err, results) => {
+        const id = req.params.id;
+        await client.query(`DELETE FROM usuario WHERE id = $1`, [id], (err, results) => {
             if (err) {
                 resp.status(400).send(err);
 
