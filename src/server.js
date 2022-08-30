@@ -1,4 +1,4 @@
-    require('dotenv').config();
+require('dotenv').config();
     const cors = require('cors');
     const morgan =require('morgan')
     const express = require('express');
@@ -19,13 +19,22 @@
         }
     );
 
-    const user = require('./api/database/User')
+    const user = require('./api/database/User');
+    const pedido = require('./api/database/Orders');
+    const product = require('./api/database/Product');
 
     app.post('/user/insert', user.createUser);
     app.get('/userget/:id', user.getUser);
     app.put('/userupdate', user.updateUser);
     app.delete('/user/delete/:id', user.deleteUser);
     app.get('/users', user.getAllUsers);
+
+    app.post('/order/insert', pedido.createOrdered);
+    app.get('/getorders', pedido.getOrdered);
+
+    app.get('/getproduct', product.getAllProducts);
+
+
 
 
     app.listen(port, () => console.log(port));
