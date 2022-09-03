@@ -28,6 +28,7 @@ require('dotenv').config();
     app.put('/userupdate', user.updateUser);
     app.delete('/user/delete/:id', user.deleteUser);
     app.get('/users', user.getAllUsers);
+    app.post('/login', user.auth);
 
     app.post('/order/insert', pedido.createOrdered);
     app.get('/getorders', pedido.getOrdered);

@@ -1,4 +1,7 @@
     const client = require('../../index');
+    const jwt = require('jsonwebtoken');
+
+    const authConfig = require('../../config/auth.json');
 
     const createUser = async (req, resp) =>{
         const {
@@ -25,7 +28,7 @@
         const id = parseInt(req.params.id);
         console.log("id")
 
-        await client.query('SELECT * FROM usuario WHERE id = $1',
+        await client.query('SELECT id,nome, email,img FROM usuario WHERE id = $1',
             [id],
             (err, results) => {
 
@@ -46,7 +49,7 @@
 
     const getAllUsers = async (req, resp) => {
 
-        await client.query(`SELECT id,nome, email, senha FROM usuario`,
+        await client.query(`SELECT id,nome, email, img FROM usuario`,
             (err, results) => {
 
                 if (err) {
@@ -111,10 +114,57 @@
         });
     }
 
+    const auth = async (req, resp) => {
+        const {email, senha} = req.body;
+        
+        await client.query(`SELECT id,email,nome,img,senha FROM usuario WHERE email = $1`, [email],
+            (err, results) => {
+
+            if (err) {
+                resp.status(400).send(err);
+
+            } else if (results.rowCount == 0) {
+                resp.status(404).json({
+                    message: "There is no registered user"
+                });
+
+            } else {
+                console.log(results.rows[0]);
+                
+
+                if(results.rows[0]){
+                    const {id, nome, img} = results.rows[0];
+                    const userEmail = results.rows[0].email;
+                    const userPassword = results.rows[0].senha;
+
+                    if(userEmail === email && userPassword === senha){
+                        const token = jwt.sign({id}, authConfig.secret, {
+                            expiresIn: 86400,
+                        });
+                        resp.status(200).json({
+                            user: {
+                                id,
+                                email: userEmail,
+                                nome,
+                                img,
+                            },
+                            token
+                        });
+                    }else{
+                        resp.status(400).json('Incorrect username or password')
+                    }
+                }
+            }
+
+        });
+        
+    }
+
     module.exports = {
         createUser,
         getUser,
         updateUser,
         deleteUser,
-        getAllUsers
+        getAllUsers,
+        auth
     }
