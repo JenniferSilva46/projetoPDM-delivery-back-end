@@ -129,9 +129,6 @@
                 });
 
             } else {
-                console.log(results.rows[0]);
-                
-
                 if(results.rows[0]){
                     const {id, nome, img} = results.rows[0];
                     const userEmail = results.rows[0].email;
