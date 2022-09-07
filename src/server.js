@@ -3,8 +3,9 @@ const cors = require("cors");
 const morgan = require("morgan");
 const express = require("express");
 const app = express();
-const validation = require('./api/middlewares/validationMiddleware');
-const userSchema = require('./api/validations/userValidation');
+const validation = require("./api/middlewares/validationMiddleware");
+const userSchema = require("./api/validations/userValidation");
+const loginSchema = require("./api/validations/loginValidation");
 
 app.use(express.json());
 app.use(cors());
@@ -23,12 +24,12 @@ const user = require("./api/database/User");
 const pedido = require("./api/database/Orders");
 const product = require("./api/database/Product");
 
-app.post("/user/insert",validation(userSchema), user.createUser);
+app.post("/user/insert", validation(userSchema), user.createUser);
 app.get("/userget/:id", user.getUser);
 app.put("/userupdate", user.updateUser);
 app.delete("/user/delete/:id", user.deleteUser);
 app.get("/users", user.getAllUsers);
-app.post("/user/login", user.auth);
+app.post("/user/login", validation(loginSchema), user.auth);
 
 app.post("/order/insert", pedido.createOrdered);
 app.get("/getorders", pedido.getOrdered);
