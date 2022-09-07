@@ -22,6 +22,8 @@ require('dotenv').config();
     const user = require('./api/database/User');
     const pedido = require('./api/database/Orders');
     const product = require('./api/database/Product');
+    const product_orders = require('./api/database/ProductOrders');
+    const adress = require('./api/database/Adress');
 
     app.post('/user/insert', user.createUser);
     app.get('/userget/:id', user.getUser);
@@ -35,7 +37,15 @@ require('dotenv').config();
 
     app.get('/getproduct', product.getAllProducts);
 
+    app.get('/productOrders/:id/:date', product_orders.getProductOrder);
+    app.get('/orderDetails/:id/:pedido', product_orders.getOrderDetails);
+    app.get('/orderBag/:id/', product_orders.getProductBag);
 
+
+    app.post('/adress/insert', adress.createAdress);
+    app.get('/adressGet/:id', adress.getAdress);
+    app.put('/adressUpdate', adress.updateAdress);
+    app.delete('/adress/delete/:id', adress.deleteAdress);
 
 
     app.listen(port, () => console.log(port));
