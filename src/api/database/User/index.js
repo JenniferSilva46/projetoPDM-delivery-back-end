@@ -9,20 +9,30 @@ const createUser = async (req, resp) => {
 
   const hashSenha = bcrypt.hash(senha, 10);
 
-  await client.query(
-    `INSERT INTO usuario (nome, email, senha)
-        VALUES ('${nome}', '${email}', '${hashSenha}')`,
-    (err, results) => {
-      if (err) {
-        resp.status(400).send(err);
-        console.log(err);
-        return;
+  const userEmail = client.query(`SELECT email FROM usuario WHERE email = $1`, [
+    email,
+  ]);
+
+  if ((await userEmail).rowCount) {
+    resp.status(401).send({
+      message: "This email already exists",
+    });
+  } else {
+    await client.query(
+      `INSERT INTO usuario (nome, email, senha)
+          VALUES ('${nome}', '${email}', '${hashSenha}')`,
+      (err, results) => {
+        if (err) {
+          resp.status(400).send(err);
+          console.log(err);
+          return;
+        }
+        resp.status(200).send({
+          message: "Inserted",
+        });
       }
-      resp.status(200).send({
-        message: "Inserted",
-      });
-    }
-  );
+    );
+  }
 };
 
 const getUser = async (req, resp) => {
