@@ -7,11 +7,12 @@
         const {
             nome,
             email,
-            senha
+            senha,
+            img
         } = req.body;
-
-        await client.query(`INSERT INTO usuario (nome, email, senha)
-        VALUES ('${nome}', '${email}', '${senha}')`, (err, results) => {
+        console.log(nome, email, senha)
+        await client.query(`INSERT INTO usuario (nome, email, senha, img)
+        VALUES ('${nome}', '${email}', '${senha}', '${img}')`, (err, results) => {
             if (err) {
                 resp.status(400).send(err);
                 console.log(err);
@@ -24,28 +25,28 @@
 
     }
 
-    const getUser= async (req, resp) => {
-        const id = parseInt(req.params.id);
-        console.log("id")
+        const getUser= async (req, resp) => {
+            const id = parseInt(req.params.id);
+            console.log("id")
 
-        await client.query('SELECT id,nome, email,img FROM usuario WHERE id = $1',
-            [id],
-            (err, results) => {
+            await client.query('SELECT id,nome, email,img FROM usuario WHERE id = $1',
+                [id],
+                (err, results) => {
 
-            if (err) {
-                resp.status(400).send(err);
+                if (err) {
+                    resp.status(400).send(err);
 
-            } else if (results.rowCount == 0) {
-                resp.status(200).json({
-                    message: "There is no registered user"
-                });
+                } else if (results.rowCount == 0) {
+                    resp.status(200).json({
+                        message: "There is no registered user"
+                    });
 
-            } else {
-                resp.status(200).json(results.rows);
-            }
+                } else {
+                    resp.status(200).json(results.rows);
+                }
 
-        });
-    }
+            });
+        }
 
     const getAllUsers = async (req, resp) => {
 
@@ -72,24 +73,23 @@
         const {
             id,
             nome,
+            email,
+            senha,
+            img
         } = req.body;
 
-        await client.query('UPDATE usuario SET nome = $2 WHERE id= $1',
-            [id, nome],
+        await client.query('UPDATE usuario SET nome = $2, email = $3, senha = $4, img = $5 WHERE id= $1',
+            [id, nome, email, senha, img],
             (err, results) => {
-
                 if (err) {
                     resp.status(400).send(err);
-
                 } else if (results.rowCount == 0) {
                     resp.status(200).json({
-                        message: "There is no registered user"
+                        message: ""
                     });
-
                 } else {
                     resp.status(200).json(results.rows);
                 }
-
             });
     };
 
