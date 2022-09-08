@@ -41,6 +41,7 @@ app.get("/getorders", pedido.getOrdered);
 //produto
 app.get("/getproduct", product.getAllProducts);
 app.get('/productOrders/:id/:date', product_orders.getProductOrder);
+app.post('/sacola', product_orders.createSacola);
 app.get('/orderDetails/:id/:pedido', product_orders.getOrderDetails);
 app.get('/orderBag/:id/', product_orders.getProductBag);
 app.get('/deleteBag/:id/', product_orders.deleteBag);

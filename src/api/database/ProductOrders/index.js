@@ -132,9 +132,31 @@ const getProductBag = async (req, resp) => {
         });
 }
 
+const createSacola = async (req, resp) => {
+    const {
+        id_produto,
+        id_usuario,
+        quantidade,
+
+    } = req.body;
+
+    await client.query(`INSERT INTO sacola(id_produto, id_usuario, quantidade)
+        VALUES ( ${id_produto}, ${id_usuario}, ${quantidade})`, (err, results) => {
+        if (err) {
+            resp.status(400).send(err);
+            console.log(err);
+            return;
+        }
+        resp.status(200).send({
+            message: "Inserted"
+        });
+    });
+
+
+
+}
 const deleteBag = async (req, resp) => {
     const id_sacola = req.params.id;
-
 
     await client.query(
         `DELETE FROM sacola WHERE id_sacola = $1` ,
@@ -160,5 +182,6 @@ module.exports = {
     getProductOrder,
     getOrderDetails,
     getProductBag,
+    createSacola,
     deleteBag
 }
