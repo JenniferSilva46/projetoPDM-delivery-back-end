@@ -5,7 +5,7 @@ const getProductOrder = async (req, resp) => {
     const id_usuario = parseInt(req.params.id);
     const date = req.params.date;
 
-    await client.query(`SELECT id, data_pedido, preco_total, status_pedido  FROM  pedido  WHERE id_usuario=$1 AND data_pedido=$2`,
+    await client.query(`SELECT id, data_pedido, preco_total, status_pedido  FROM  pedido  WHERE id_usuario=$1 AND data_pedido=$2 order by id`,
         [id_usuario, date],
         (err, results) => {
 
@@ -130,9 +130,33 @@ const getProductBag = async (req, resp) => {
         });
 }
 
+const createSacola = async (req, resp) => {
+    const {
+        id_produto,
+        id_usuario,
+        quantidade,
+
+    } = req.body;
+
+    await client.query(`INSERT INTO sacola(id_produto, id_usuario, quantidade)
+        VALUES ( ${id_produto}, ${id_usuario}, ${quantidade})`, (err, results) => {
+        if (err) {
+            resp.status(400).send(err);
+            console.log(err);
+            return;
+        }
+        resp.status(200).send({
+            message: "Inserted"
+        });
+    });
+
+
+
+}
 
 module.exports = {
     getProductOrder,
     getOrderDetails,
-    getProductBag
+    getProductBag,
+    createSacola
 }
