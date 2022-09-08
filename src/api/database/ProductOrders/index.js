@@ -93,25 +93,27 @@ const getProductBag = async (req, resp) => {
 
     const id_usuario = parseInt(req.params.id);
 
-    await client.query(`SELECT 
-                            id,
-                            img,
-                            nome,
-                            preco,
-                            quantidade,
-                            (preco * quantidade) as preco_total
+    await client.query(`SELECT id_sacola,
+                               id_produto,
+                               img,
+                               nome,
+                               descricao,
+                               preco,
+                               quantidade,
+                               (preco * quantidade) as preco_total
                         FROM (
-                            SELECT 
-                               prd.id,
-                               prd.img,
-                               prd.nome,
-                               prd.preco,
-                               s.quantidade
-                             FROM sacola s,
-                               produto prd
-                             WHERE s.id_produto = prd.id
-                             AND s.id_usuario = $1
-                        ) as tb`,
+                                 SELECT s.id   as id_sacola,
+                                        prd.id as id_produto,
+                                        prd.img,
+                                        prd.nome,
+                                        prd.descricao,
+                                        prd.preco,
+                                        s.quantidade
+                                 FROM sacola s,
+                                      produto prd
+                                 WHERE s.id_produto = prd.id
+                                   AND s.id_usuario = 1
+                             ) as tb`,
         [id_usuario],
         (err, results) => {
 
@@ -130,9 +132,33 @@ const getProductBag = async (req, resp) => {
         });
 }
 
+const deleteBag = async (req, resp) => {
+    const id_sacola = req.params.id;
+
+
+    await client.query(
+        `DELETE FROM sacola WHERE id_sacola = $1` ,
+        [id_sacola],
+        (err, results) => {
+            if (err) {
+                resp.status(400).send(err);
+            } else if (results.rowCount == 0) {
+                resp.status(400).send({
+                    message: "Informed does not exist",
+                });
+            } else {
+                resp.status(200).send({
+                    message: "User deleted!",
+                });
+            }
+        }
+    );
+};
+
 
 module.exports = {
     getProductOrder,
     getOrderDetails,
-    getProductBag
+    getProductBag,
+    deleteBag
 }
