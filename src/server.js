@@ -44,16 +44,15 @@ app.get("/getproduct", product.getAllProducts);
 app.get('/productOrders/:id/:date', product_orders.getProductOrder);
 app.get('/orderDetails/:id/:pedido', product_orders.getOrderDetails);
 app.get('/orderBag/:id/', product_orders.getProductBag);
-app.get('/deleteBag/:id/', product_orders.deleteBag);
+app.delete('/deleteBag/:id/', product_orders.deleteBag);
 
 //sacola
-app.post('/bag', validation(bagSchema), product_orders.createSacola);
+app.post('/bag', validation(bagSchema), product_orders.createBag);
 
 //endereço
 app.post('/adress/insert', adress.createAdress);
 app.get('/adressGet/:id', adress.getAdress);
 app.put('/adressUpdate', adress.updateAdress);
 app.delete('/adress/delete/:id', adress.deleteAdress);
-
 
 app.listen(port, () => console.log(port));

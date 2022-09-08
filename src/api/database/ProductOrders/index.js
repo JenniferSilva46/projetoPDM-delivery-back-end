@@ -112,9 +112,8 @@ const getProductBag = async (req, resp) => {
                                  FROM sacola s,
                                       produto prd
                                  WHERE s.id_produto = prd.id
-                                   AND s.id_usuario = 1
+                                   AND s.id_usuario = id_usuario
                              ) as tb`,
-        [id_usuario],
         (err, results) => {
 
             if (err) {
@@ -132,7 +131,7 @@ const getProductBag = async (req, resp) => {
         });
 }
 
-const createSacola = async (req, resp) => {
+const createBag = async (req, resp) => {
     const {
         id_produto,
         id_usuario,
@@ -155,11 +154,11 @@ const createSacola = async (req, resp) => {
 
 
 }
+
 const deleteBag = async (req, resp) => {
     const id_sacola = req.params.id;
 
-    await client.query(
-        `DELETE FROM sacola WHERE id_sacola = $1` ,
+    await client.query(`DELETE FROM sacola WHERE id = $1` ,
         [id_sacola],
         (err, results) => {
             if (err) {
@@ -182,6 +181,6 @@ module.exports = {
     getProductOrder,
     getOrderDetails,
     getProductBag,
-    createSacola,
+    createBag,
     deleteBag
 }
