@@ -138,7 +138,7 @@ const createSacola = async (req, resp) => {
 
     } = req.body;
 
-    await client.query(`INSERT INTO sacola(id_produto, id_usuario, quantidade)
+    await client.query(`INSERT INTO sacola (id_produto, id_usuario, quantidade)
         VALUES ( ${id_produto}, ${id_usuario}, ${quantidade})`, (err, results) => {
         if (err) {
             resp.status(400).send(err);

@@ -6,6 +6,7 @@ const app = express();
 const validation = require("./api/middlewares/validationMiddleware");
 const userSchema = require("./api/validations/userValidation");
 const loginSchema = require("./api/validations/loginValidation");
+const bagSchema = require("./api/validations/bagValidation");
 
 app.use(express.json());
 app.use(cors());
@@ -41,9 +42,11 @@ app.get("/getorders", pedido.getOrdered);
 //produto
 app.get("/getproduct", product.getAllProducts);
 app.get('/productOrders/:id/:date', product_orders.getProductOrder);
-app.post('/sacola', product_orders.createSacola);
 app.get('/orderDetails/:id/:pedido', product_orders.getOrderDetails);
 app.get('/orderBag/:id/', product_orders.getProductBag);
+
+//sacola
+app.post('/bag', validation(bagSchema), product_orders.createSacola);
 
 //endereço
 app.post('/adress/insert', adress.createAdress);
