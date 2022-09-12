@@ -5,7 +5,7 @@ const getProductOrder = async (req, resp) => {
     const id_usuario = parseInt(req.params.id);
     const date = req.params.date;
 
-    await client.query(`SELECT id, data_pedido, preco_total, status_pedido  FROM  pedido  WHERE id_usuario=$1 AND data_pedido=$2`,
+    await client.query(`SELECT id, data_pedido, preco_total, status_pedido  FROM  pedido  WHERE id_usuario=$1 AND data_pedido=$2 order by id`,
         [id_usuario, date],
         (err, results) => {
 
@@ -176,11 +176,60 @@ const deleteBag = async (req, resp) => {
     );
 };
 
+const createOrder = async (req, resp) => {
+    const {
+        id_usuario,
+        id_endereco,
+        tipo_pagamento,
+        troco,
+        status_pedido,
+        data_pedido,
+        preco_total
+
+    } = req.body;
+
+    const res= await client.query(`INSERT INTO pedido (id_usuario, id_endereco, tipo_pagamento, troco, data_pedido, status_pedido, preco_total)
+                        VALUES ( ${id_usuario}, ${id_endereco}, ${tipo_pagamento}, ${troco}, '${data_pedido}', '${status_pedido}', ${preco_total})`,
+        (err, results) => {
+        if (err) {
+            resp.status(400).send(err);
+            console.log(err);
+            return;
+        }
+        resp.status(200).send(results   );
+    });
+    console.log(res)
+}
+
+const createProductOrder = async (req, resp) => {
+    const {
+        id_pedido,
+        id_produto,
+        id_usuario,
+        preco_produto,
+        quantidade
+    } = req.body;
+
+    await client.query(`INSERT INTO produtos_pedido (id_pedido, id_produto, id_usuario, preco_produto, quantidade)
+                        VALUES ( ${id_pedido}, ${id_produto}, ${id_usuario}, ${preco_produto}, ${quantidade})`, (err, results) => {
+        if (err) {
+            resp.status(400).send(err);
+            console.log(err);
+            return;
+        }
+        resp.status(200).send({
+            message: "Inserted"
+        });
+    });
+}
+
 
 module.exports = {
     getProductOrder,
     getOrderDetails,
     getProductBag,
     createBag,
-    deleteBag
+    deleteBag,
+    createProductOrder,
+    createOrder
 }

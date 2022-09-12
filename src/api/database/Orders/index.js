@@ -10,7 +10,7 @@ const createOrdered = async (req, resp) => {
     } = req.body;
 
     await client.query(`INSERT INTO pedido ( id_usuario, id_endereco, pagamento, data_pedido, subtotal)
-        VALUES ('${id_usuario}', '${id_endereco}', '${pagamentopagamentota_pedido}', '${subtotal}')`, (err, results) => {
+        VALUES ('${id_usuario}', '${id_endereco}', '${pagamento}', '${subtotal}')`, (err, results) => {
         if (err) {
             resp.status(400).send(err);
             console.log(err);

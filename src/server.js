@@ -49,6 +49,9 @@ app.delete('/deleteBag/:id/', product_orders.deleteBag);
 //sacola
 app.post('/bag', validation(bagSchema), product_orders.createBag);
 
+app.post('/orderInsert', product_orders.createOrder);
+app.post('/productOrder/insert', product_orders.createProductOrder);
+
 //endereço
 app.post('/adress/insert', adress.createAdress);
 app.get('/adressGet/:id', adress.getAdress);
