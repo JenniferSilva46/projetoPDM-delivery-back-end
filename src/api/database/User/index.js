@@ -75,10 +75,11 @@ const getAllUsers = async (req, resp) => {
 
 const updateUser = async (req, resp) => {
   const { id, nome, email, senha, img } = req.body;
+  const hashSenha = bcrypt.hash(senha, 10);
 
   await client.query(
     "UPDATE usuario SET nome = $2, email = $3, senha = $4, img = $5 WHERE id= $1",
-    [id, nome, email, senha, img],
+    [id, nome, email, hashSenha, img],
     (err, results) => {
       if (err) {
         resp.status(400).send(err);

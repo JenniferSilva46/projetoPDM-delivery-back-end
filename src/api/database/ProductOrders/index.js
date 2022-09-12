@@ -112,7 +112,7 @@ const getProductBag = async (req, resp) => {
                                  FROM sacola s,
                                       produto prd
                                  WHERE s.id_produto = prd.id
-                                   AND s.id_usuario = id_usuario
+                                   AND s.id_usuario = ${id_usuario}
                              ) as tb`,
         (err, results) => {
 
