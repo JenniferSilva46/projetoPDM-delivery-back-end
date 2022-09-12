@@ -74,11 +74,11 @@ const getAllUsers = async (req, resp) => {
 };
 
 const updateUser = async (req, resp) => {
-  const { id, nome } = req.body;
+  const { id, nome, email, senha, img } = req.body;
 
   await client.query(
-    "UPDATE usuario SET nome = $2 WHERE id= $1",
-    [id, nome],
+    "UPDATE usuario SET nome = $2, email = $3, senha = $4, img = $5 WHERE id= $1",
+    [id, nome, email, senha, img],
     (err, results) => {
       if (err) {
         resp.status(400).send(err);
